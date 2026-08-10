@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"> <!-- ➕ compatibilidade TVs antigas -->
+
+    <!-- ➕ viewport otimizado para TV -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+    <title>✰ KUROMI TV ✰</title>
+
+    <!-- ➕ PWA / APP NATIVO — a imagem entra SÓ como ícone do app -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3f0000">
+    <meta name="mobile-web-app-capable" content="yes">          <!-- Samsung Tizen / Android TV -->
+    <meta name="application-name" content="KUROMI TV">
+    <meta name="apple-mobile-web-app-capable" content="yes">    <!-- LG WebOS / iOS -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="KUROMI TV">
+    <link rel="apple-touch-icon" href="icon-512.png">
+    <link rel="icon" type="image/png" href="icon-512.png">
+
+    <style>
+        :root {
+            --background-color: #3f0000; /* Vermelho escuro */
+            --surface-color: #5a0000;    /* Vermelho um pouco mais claro para as categorias */
+            --primary-text-color: #ffffff; /* Texto principal branco */
+            --secondary-text-color: #e0e0e0; /* Texto secundário levemente acinzentado */
+            --accent-color: #ff3333;     /* Vermelho vibrante para destaque */
+            --border-color: #8b0000;     /* Vermelho escuro para bordas */
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--background-color);
+            color: var(--primary-text-color);
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.8em;
+            color: var(--accent-color);
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        #user-session {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 100; 
+        }
+        
+        /* ESTILO PARA O ÍCONE/MENU */
+        #settings-icon {
+            cursor: pointer;
+            font-size: 24px;
+            line-height: 1;
+            padding: 5px;
+            transition: color 0.3s;
+        }
+        #settings-icon:hover {
+            color: var(--accent-color);
+        }
+
+        #account-menu {
+            position: absolute;
+            top: 100%; /* Posiciona abaixo do ícone */
+            right: 0;
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            overflow: hidden;
+            width: 180px; 
+            margin-top: 10px;
+        }
+
+        #account-menu button {
+            display: block;
+            width: 100%;
+            padding: 10px 15px;
+            text-align: left;
+            background: none;
+            border: none;
+            color: var(--primary-text-color);
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        #account-menu button:hover {
+            background-color: #8B0000;
+        }
+        
+        .logout-button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .logout-button:hover {
+            background-color: #cc0000;
+        }
+
+        #current-channel {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 1.3em;
+            color: var(--secondary-text-color);
+            font-weight: 500;
+        }
+        .player-container {
+            width: 100%;
+            position: relative;
+            padding-top: 56.25%;
+            background-color: #000;
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 3px solid var(--border-color);
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+        }
+        .player-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .channel-grid-container {
+            margin-top: 30px;
+        }
+        .channel-category {
+            background-color: var(--surface-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+        .channel-category h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+        .channel-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .channel-button {
+            background-color: #8B0000;
+            color: #fff;
+            border: 1px solid #B22222;
+            padding: 12px 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: 500;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+        }
+        .channel-button:hover {
+            background-color: #B22222;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        /* ➕ foco visível para controle remoto / D-pad de TV */
+        .channel-button:focus, .channel-button:focus-visible {
+            background-color: #B22222;
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 0 14px rgba(255,51,51,.8);
+            outline: 3px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+        :focus-visible {
+            outline: 3px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            width: 100%;
+            font-size: 0.9em;
+            color: var(--secondary-text-color);
+            border-top: 1px solid var(--border-color);
+        }
+        #auth-container, #recharge-container, #redeem-code-modal {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: var(--surface-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            border: 1px solid var(--border-color);
+        }
+        #redeem-code-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 200;
+            max-width: 450px;
+            width: 90%;
+            margin: 0; 
+        }
+        #modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 150;
+        }
+
+        .form-container h2 {
+            text-align: center;
+            color: var(--accent-color);
+            margin-bottom: 25px;
+        }
+        .form-container .form-group {
+            margin-bottom: 15px;
+        }
+        .form-container label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .form-container input {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--background-color);
+            border: 1px solid var(--border-color);
+            color: var(--primary-text-color);
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .form-container button[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--accent-color);
+            border: none;
+            color: white;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .form-container button[type="submit"]:hover {
+            background-color: #cc0000;
+        }
+        .toggle-form {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .toggle-form a {
+            color: var(--accent-color);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .message {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        #recharge-container p {
+            text-align: center;
+            line-height: 1.5;
+        }
+        .hidden {
+            display: none;
+        }
+        
+        .modal-close-button {
+            width: 100%; 
+            padding: 12px; 
+            font-weight: bold; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            transition: background-color 0.3s; 
+            background-color: var(--surface-color); 
+            border: 1px solid var(--border-color); 
+            color: var(--primary-text-color); 
+            margin-top: 15px;
+        }
+        .modal-close-button:hover {
+            background-color: #4a0000;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="auth-container" class="hidden">
+        <div id="login-form-container" class="form-container">
+            <form id="login-form">
+                <h2>Login</h2>
+                <div class="form-group"><label for="login-username">Usuário</label><input type="text" id="login-username" required></div>
+                <div class="form-group"><label for="login-password">Senha</label><input type="password" id="login-password" required></div>
+                <button type="submit">Entrar</button>
+                <p id="login-message" class="message"></p>
+            </form>
+            <p class="toggle-form">Não tem uma conta? <a id="show-register">Registre-se</a></p>
+        </div>
+        
+        <div id="register-form-container" class="form-container hidden">
+            <form id="register-form">
+                <h2>Registro</h2>
+                <div class="form-group"><label for="register-username">Usuário</label><input type="text" id="register-username" required></div>
+                <div class="form-group"><label for="register-password">Senha</label><input type="password" id="register-password" required></div>
+                <button type="submit">Criar Conta</button>
+                <p id="register-message" class="message"></p>
+            </form>
+            <p class="toggle-form">Já tem uma conta? <a id="show-login">Faça Login</a></p>
+        </div>
+    </div>
+
+    <div id="recharge-container" class="hidden">
+        <div class="form-container">
+             <h2>Acesso Expirado</h2>
+             <p>Sua assinatura terminou ou nunca foi ativada. Insira um código de recarga para continuar.</p>
+             <form id="recharge-form">
+                  <div class="form-group">
+                       <label for="recharge-code">Código de Recarga</label>
+                       <input type="text" id="recharge-code" required>
+                  </div>
+                  <button type="submit">Ativar</button>
+                  <p id="recharge-message" class="message"></p>
+             </form>
+             <button id="recharge-logout-button" class="logout-button" style="width: 100%; margin-top: 15px;">Sair</button>
+        </div>
+    </div>
+
+    <div id="main-content" class="container hidden">
+        <header>
+            <h1>✰ KUROMI TV ✰</h1>
+            <div id="user-session" class="hidden">
+                 <span id="welcome-message"></span>
+                 <span id="settings-icon">⚙️</span>
+                 <div id="account-menu" class="hidden">
+                     <button id="menu-redeem-code">Resgatar Código</button>
+                     <button id="menu-logout">Sair</button>
+                     <button id="menu-delete-account" style="color: var(--accent-color);">Deletar Conta</button>
+                 </div>
+            </div>
+        </header>
+
+        <main>
+             <div id="redeem-code-modal" class="hidden">
+                 <div class="form-container">
+                      <h2>Resgatar Código</h2>
+                      <p style="text-align: center; font-size: 0.9em; color: var(--secondary-text-color);">Adicione mais dias à sua assinatura.</p>
+                      <form id="redeem-form">
+                           <div class="form-group">
+                                <label for="redeem-code">Código de Recarga</label>
+                                <input type="text" id="redeem-code" required>
+                           </div>
+                           <button type="submit">Resgatar</button>
+                           <p id="redeem-message" class="message"></p>
+                      </form>
+                      <button id="close-redeem-modal" class="modal-close-button">Fechar</button>
+                 </div>
+             </div>
+             <div id="modal-overlay" class="hidden"></div>
+
+             <div class="player-container">
+                 <iframe id="tv-player" 
+                         src="about:blank" 
+                         allow="autoplay; encrypted-media; fullscreen" 
+                         allowfullscreen>
+                 </iframe>
+             </div>
+             <p id="current-channel">Escolha Um Canal Abaixo</p>
+
+             <!-- CONTAINER DINÂMICO DE CANAIS (Substitui a grade estática) -->
+             <div id="dynamic-channels-container" class="channel-grid-container"></div>
+        </main>
+        <footer><p>&copy; Serviços Ainda Em Desenvolvimento Podendo Apresentar Falhas.</p></footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
