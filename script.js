@@ -7,19 +7,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     baseUrl: "https://sinalpublicoetv.vercel.app",
                 categorias: [
                     {
-                        nome: "A Fazenda (Câmeras)",
-                        canais: [
-                            { id: "afazenda1", nome: "Câmera 1" },
-                            { id: "afazenda2", nome: "Câmera 2" },
-                            { id: "afazenda3", nome: "Câmera 3" },
-                            { id: "afazenda4", nome: "Câmera 4" }
-                        ]
-                    },
-                    {
                         nome: "Canais Abertos",
                         canais: [
-                            { id: "globo", nome: "Globo" },
+                            { id: "globorj", nome: "Globo RJ" },
+                            { id: "globosp", nome: "Globo SP" },
+                            { id: "globomg", nome: "Globo MG" },
+                            { id: "globope", nome: "Globo PE" },
+                            { id: "globopb", nome: "Globo PB" },
+                            { id: "globors", nome: "Globo RS" },
+                            { id: "globoes", nome: "Globo ES" },
+                            { id: "globoam", nome: "Globo AM" },
+                            { id: "globoce", nome: "Globo CE" },
                             { id: "sbt", nome: "SBT" },
+                            { id: "sbtsp", nome: "SBT SP" },
+                            { id: "sbtrj", nome: "SBT RJ" },
                             { id: "record", nome: "Record TV" },
                             { id: "band", nome: "Band" }
                         ]
@@ -28,6 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         nome: "Notícias",
                         canais: [
                             { id: "globonews", nome: "GloboNews" },
+                            { id: "sbtnews", nome: "SBT NEWS" },
                             { id: "bandnews", nome: "BandNews" },
                             { id: "cnnbrasil", nome: "CNN Brasil" },
                             { id: "jovempan", nome: "Jovem Pan News" }
