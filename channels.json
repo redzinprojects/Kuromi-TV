@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "updatedAt": "2026-08-11T00:00:00Z",
+  "categories": [
+    {"name":"Canais Abertos","channels":[{"name":"Globo RJ","id":"globorj"},{"name":"Globo SP","id":"globosp"},{"name":"Globo MG","id":"globomg"},{"name":"Globo PE","id":"globope"},{"name":"Globo PB","id":"globopb"},{"name":"Globo RS","id":"globors"},{"name":"Globo ES","id":"globoes"},{"name":"Globo AM","id":"globoam"},{"name":"Globo CE","id":"globoce"},{"name":"SBT","id":"sbt"},{"name":"SBT SP","id":"sbtsp"},{"name":"SBT RJ","id":"sbtrj"},{"name":"Record TV","id":"record"},{"name":"Band","id":"band"}]},
+    {"name":"Notícias","channels":[{"name":"GloboNews","id":"globonews"},{"name":"SBT NEWS","id":"sbtnews"},{"name":"BandNews","id":"bandnews"},{"name":"CNN Brasil","id":"cnnbrasil"},{"name":"Jovem Pan News","id":"jovempan"}]},
+    {"name":"Esportes","channels":[{"name":"SporTV","id":"sportv"},{"name":"SporTV 2","id":"sportv2"},{"name":"SporTV 3","id":"sportv3"},{"name":"ESPN","id":"espn"},{"name":"ESPN 2","id":"espn2"},{"name":"ESPN 3","id":"espn3"},{"name":"ESPN 4","id":"espn4"},{"name":"Premiere","id":"premiere"},{"name":"Combate","id":"combate"},{"name":"Cazé TV","id":"cazetv"},{"name":"Band Sports","id":"bandsports"}]},
+    {"name":"Filmes e Séries","channels":[{"name":"Telecine","id":"telecine"},{"name":"Telecine Premium","id":"telecinepremium"},{"name":"Telecine Pipoca","id":"telecinepipoca"},{"name":"Telecine Action","id":"telecineaction"},{"name":"Universal TV","id":"universal"},{"name":"Studio Universal","id":"studiouniversal"},{"name":"Megapix","id":"megapix"},{"name":"AMC","id":"amc"},{"name":"Paramount Network","id":"paramount"},{"name":"AXN","id":"axn"},{"name":"Syfy","id":"syfy"}]},
+    {"name":"Infantil","channels":[{"name":"Gloob","id":"gloob"},{"name":"Gloobinho","id":"gloobinho"},{"name":"Nickelodeon","id":"nickelodeon"},{"name":"Nick Jr.","id":"nickjr"},{"name":"Cartoon Network","id":"cartoonnetwork"},{"name":"Discovery Kids","id":"discoverykids"},{"name":"Rá-Tim-Bum","id":"ratimbum"}]},
+    {"name":"Documentários e Cultura","channels":[{"name":"Canal Brasil","id":"canalbrasil"},{"name":"Arte 1","id":"arte1"},{"name":"Discovery Channel","id":"discovery"},{"name":"History Channel","id":"history"},{"name":"Animal Planet","id":"animalplanet"},{"name":"National Geographic","id":"natgeo"}]},
+    {"name":"Variedades e Música","channels":[{"name":"Multishow","id":"multishow"},{"name":"GNT","id":"gnt"},{"name":"BIS","id":"bis"},{"name":"MTV","id":"mtv"}]}
+  ]
+}
