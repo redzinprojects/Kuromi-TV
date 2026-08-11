@@ -2,25 +2,20 @@ package com.kuromitv.nativeapp;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.HorizontalScrollView;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.webkit.WebSettings;
+import android.widget.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -29,61 +24,37 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class MainActivity extends Activity {
-    private static final String PLAYER_BASE = "https://sinaldvd.github.io/tv/player.html?id=";
-    private static final String CHANNELS_URL = "https://raw.githubusercontent.com/redzinprojects/Kuromi-TV/main/channels.json";
-    private static final String CACHE_KEY = "channels_json";
-    private static final int BG = Color.rgb(12,12,15), RED = Color.rgb(185,25,42), WHITE = Color.WHITE, MUTED = Color.rgb(190,190,198);
-    private final Map<String, ArrayList<Channel>> categories = new LinkedHashMap<>();
+    private static final String PLAYER_BASE="https://sinalpublicoetv.vercel.app/?id=";
+    private static final String CHANNELS_URL="https://raw.githubusercontent.com/redzinprojects/Kuromi-TV/main/channels.json";
+    private static final String CODES_URL="https://raw.githubusercontent.com/redzinprojects/Kuromi-TV/main/codes.json";
+    private static final String CACHE_KEY="channels_json";
+    private static final int BG=Color.rgb(63,0,0), SURFACE=Color.rgb(90,0,0), RED=Color.rgb(255,51,51), BORDER=Color.rgb(139,0,0), WHITE=Color.WHITE, MUTED=Color.rgb(224,224,224);
+    private final Map<String,ArrayList<Channel>> categories=new LinkedHashMap<>();
+    private final Map<String,Integer> codes=new LinkedHashMap<>();
     private android.content.SharedPreferences prefs;
-    private LinearLayout root, content;
-    private WebView player;
-    private TextView current, syncStatus;
+    private LinearLayout root,content; private WebView player; private TextView current,syncStatus;
+    private static class Channel{final String name,id;Channel(String n,String i){name=n;id=i;}}
 
-    private static class Channel { final String name, id; Channel(String n, String i) { name=n; id=i; } }
-
-    @Override public void onCreate(Bundle state) {
-        super.onCreate(state); requestWindowFeature(Window.FEATURE_NO_TITLE); getWindow().setStatusBarColor(BG); getWindow().setNavigationBarColor(BG);
-        prefs = getSharedPreferences("kuromi", MODE_PRIVATE); seedFallback(); showHomeOrLogin();
-    }
-
-    private void seedFallback() {
-        categories.clear();
-        add("Canais Abertos", new String[][]{{"Globo RJ","globorj"},{"Globo SP","globosp"},{"Globo MG","globomg"},{"Globo PE","globope"},{"SBT","sbt"},{"SBT SP","sbtsp"},{"Record TV","record"},{"Band","band"}});
-        add("Notícias", new String[][]{{"GloboNews","globonews"},{"SBT NEWS","sbtnews"},{"BandNews","bandnews"},{"CNN Brasil","cnnbrasil"},{"Jovem Pan News","jovempan"}});
-        add("Esportes", new String[][]{{"SporTV","sportv"},{"SporTV 2","sportv2"},{"SporTV 3","sportv3"},{"ESPN","espn"},{"ESPN 2","espn2"},{"Premiere","premiere"},{"Combate","combate"},{"Cazé TV","cazetv"}});
-        add("Filmes e Séries", new String[][]{{"Telecine","telecine"},{"Telecine Premium","telecinepremium"},{"Universal TV","universal"},{"Studio Universal","studiouniversal"},{"Megapix","megapix"},{"AMC","amc"},{"Paramount Network","paramount"},{"AXN","axn"}});
-        add("Infantil", new String[][]{{"Gloob","gloob"},{"Gloobinho","gloobinho"},{"Nickelodeon","nickelodeon"},{"Nick Jr.","nickjr"},{"Cartoon Network","cartoonnetwork"},{"Discovery Kids","discoverykids"}});
-        add("Documentários e Cultura", new String[][]{{"Canal Brasil","canalbrasil"},{"Arte 1","arte1"},{"Discovery Channel","discovery"},{"History Channel","history"},{"Animal Planet","animalplanet"},{"National Geographic","natgeo"}});
-    }
-    private void add(String category, String[][] values) { ArrayList<Channel> list=new ArrayList<>(); for(String[] c:values) list.add(new Channel(c[0],c[1])); categories.put(category,list); }
-    private TextView text(String value, int size, int color) { TextView v=new TextView(this); v.setText(value); v.setTextSize(size); v.setTextColor(color); v.setPadding(20,12,20,12); return v; }
-    private LinearLayout base() { LinearLayout l=new LinearLayout(this); l.setOrientation(LinearLayout.VERTICAL); l.setPadding(28,20,28,20); l.setBackgroundColor(BG); return l; }
-    private Button button(String label) { Button b=new Button(this); b.setText(label); b.setTextColor(WHITE); b.setTextSize(15); b.setAllCaps(false); b.setFocusable(true); b.setBackgroundColor(RED); b.setPadding(18,4,18,4); return b; }
-    private EditText field(String hint, boolean pass) { EditText e=new EditText(this); e.setHint(hint); e.setHintTextColor(MUTED); e.setTextColor(WHITE); e.setTextSize(16); if(pass) e.setInputType(0x81); e.setSingleLine(); e.setPadding(16,4,16,4); return e; }
-    private void showHomeOrLogin() { if(prefs.getString("user",null)==null) showLogin(); else showCatalog(); }
-    private void showLogin() {
-        root=base(); root.setGravity(Gravity.CENTER); TextView title=text("KUROMI TV",34,WHITE); title.setGravity(Gravity.CENTER); root.addView(title,new LinearLayout.LayoutParams(-1,70));
-        final EditText user=field("Usuário",false), pass=field("Senha",true); root.addView(user,new LinearLayout.LayoutParams(420,58)); root.addView(pass,new LinearLayout.LayoutParams(420,58));
-        Button login=button("Entrar"); login.setOnClickListener(v->{if(user.getText().length()>0&&pass.getText().length()>0){prefs.edit().putString("user",user.getText().toString()).apply();showCatalog();}else toast("Informe usuário e senha");}); root.addView(login,new LinearLayout.LayoutParams(420,58));
-        Button register=button("Criar conta"); register.setOnClickListener(v->{if(user.getText().length()>0){prefs.edit().putString("user",user.getText().toString()).apply();showCatalog();}else toast("Informe um usuário");}); root.addView(register,new LinearLayout.LayoutParams(420,58)); setContentView(root); login.requestFocus();
-    }
-    private void showCatalog() {
-        root=base(); ScrollView scroll=new ScrollView(this); content=new LinearLayout(this); content.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout header=new LinearLayout(this); header.setGravity(Gravity.CENTER_VERTICAL); TextView title=text("KUROMI TV",28,WHITE); header.addView(title,new LinearLayout.LayoutParams(0,70,1));
-        syncStatus=text("Sincronizando catálogo…",13,MUTED); header.addView(syncStatus,new LinearLayout.LayoutParams(190,58)); Button refresh=button("Atualizar"); refresh.setOnClickListener(v->syncChannels()); header.addView(refresh,new LinearLayout.LayoutParams(130,58)); Button logout=button("Sair"); logout.setOnClickListener(v->{prefs.edit().clear().apply();showLogin();}); header.addView(logout,new LinearLayout.LayoutParams(90,58)); content.addView(header);
-        player=new WebView(this); player.setBackgroundColor(Color.BLACK); WebSettings ws=player.getSettings(); ws.setJavaScriptEnabled(true); ws.setDomStorageEnabled(true); ws.setMediaPlaybackRequiresUserGesture(false); ws.setLoadWithOverviewMode(true); ws.setUseWideViewPort(true); player.setWebViewClient(new WebViewClient()); player.setWebChromeClient(new WebChromeClient()); content.addView(player,new LinearLayout.LayoutParams(-1,360)); current=text("Escolha um canal abaixo",18,MUTED); current.setGravity(Gravity.CENTER); content.addView(current,new LinearLayout.LayoutParams(-1,58));
-        scroll.addView(content); root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1)); setContentView(root); renderCategories(); syncChannels();
-    }
-    private void renderCategories() {
-        if(content==null) return; while(content.getChildCount()>3) content.removeViewAt(3);
-        for(Map.Entry<String,ArrayList<Channel>> entry:categories.entrySet()) { TextView cat=text(entry.getKey(),22,WHITE); cat.setPadding(8,24,8,8); content.addView(cat); HorizontalScrollView hs=new HorizontalScrollView(this); LinearLayout row=new LinearLayout(this); row.setOrientation(LinearLayout.HORIZONTAL); for(Channel c:entry.getValue()){Button b=button(c.name); b.setTag(c); b.setOnClickListener(v->{Channel ch=(Channel)v.getTag();play(ch.id,ch.name);}); row.addView(b,new LinearLayout.LayoutParams(170,60));} hs.addView(row); content.addView(hs,new LinearLayout.LayoutParams(-1,78)); }
-    }
-    private void syncChannels() {
-        String cached=prefs.getString(CACHE_KEY,null); if(cached!=null) try{parseChannels(cached);renderCategories();}catch(Exception ignored){}
-        new Thread(()->{try{HttpURLConnection connection=(HttpURLConnection)new URL(CHANNELS_URL).openConnection(); connection.setConnectTimeout(10000); connection.setReadTimeout(15000); connection.setRequestProperty("Cache-Control","no-cache"); connection.connect(); if(connection.getResponseCode()!=200) throw new Exception("HTTP "+connection.getResponseCode()); InputStream in=connection.getInputStream(); BufferedReader br=new BufferedReader(new InputStreamReader(in,"UTF-8")); StringBuilder body=new StringBuilder(); String line; while((line=br.readLine())!=null) body.append(line); br.close(); String json=body.toString(); parseChannels(json); prefs.edit().putString(CACHE_KEY,json).apply(); runOnUiThread(()->{renderCategories(); if(syncStatus!=null) syncStatus.setText("Catálogo atualizado");}); connection.disconnect();}catch(Exception e){runOnUiThread(()->{if(syncStatus!=null) syncStatus.setText("Catálogo em cache/offline");});}}).start();
-    }
-    private void parseChannels(String json) throws Exception { JSONObject rootJson=new JSONObject(json); JSONArray cats=rootJson.getJSONArray("categories"); LinkedHashMap<String,ArrayList<Channel>> next=new LinkedHashMap<>(); for(int i=0;i<cats.length();i++){JSONObject cat=cats.getJSONObject(i); String name=cat.getString("name"); JSONArray channels=cat.getJSONArray("channels"); ArrayList<Channel> list=new ArrayList<>(); for(int j=0;j<channels.length();j++){JSONObject c=channels.getJSONObject(j); list.add(new Channel(c.getString("name"),c.getString("id")));} next.put(name,list);} categories.clear(); categories.putAll(next); }
-    private void play(String id,String name){current.setText("Canal atual: "+name);player.loadUrl(PLAYER_BASE+android.net.Uri.encode(id));}
-    private void toast(String s){Toast.makeText(this,s,Toast.LENGTH_SHORT).show();}
+    @Override public void onCreate(Bundle state){super.onCreate(state);requestWindowFeature(Window.FEATURE_NO_TITLE);getWindow().setStatusBarColor(BG);getWindow().setNavigationBarColor(BG);prefs=getSharedPreferences("kuromi",MODE_PRIVATE);seedFallback();seedCodes();showHomeOrLogin();}
+    private void seedCodes(){codes.clear();codes.put("REDZIN",1);codes.put("HENRI24",1);codes.put("30DAYSK",30);codes.put("90DAYSK",90);codes.put("365DAYSK",365);}
+    private void seedFallback(){categories.clear();add("Canais Abertos",new String[][]{{"Globo RJ","globorj"},{"Globo SP","globosp"},{"Globo MG","globomg"},{"Globo PE","globope"},{"SBT","sbt"},{"SBT SP","sbtsp"},{"Record TV","record"},{"Band","band"}});add("Notícias",new String[][]{{"GloboNews","globonews"},{"SBT NEWS","sbtnews"},{"BandNews","bandnews"},{"CNN Brasil","cnnbrasil"},{"Jovem Pan News","jovempan"}});add("Esportes",new String[][]{{"SporTV","sportv"},{"SporTV 2","sportv2"},{"SporTV 3","sportv3"},{"ESPN","espn"},{"ESPN 2","espn2"},{"Premiere","premiere"},{"Combate","combate"},{"Cazé TV","cazetv"}});add("Filmes e Séries",new String[][]{{"Telecine","telecine"},{"Telecine Premium","telecinepremium"},{"Universal TV","universal"},{"Studio Universal","studiouniversal"},{"Megapix","megapix"},{"AMC","amc"},{"Paramount Network","paramount"},{"AXN","axn"}});add("Infantil",new String[][]{{"Gloob","gloob"},{"Gloobinho","gloobinho"},{"Nickelodeon","nickelodeon"},{"Nick Jr.","nickjr"},{"Cartoon Network","cartoonnetwork"},{"Discovery Kids","discoverykids"}});add("Documentários e Cultura",new String[][]{{"Canal Brasil","canalbrasil"},{"Arte 1","arte1"},{"Discovery Channel","discovery"},{"History Channel","history"},{"Animal Planet","animalplanet"},{"National Geographic","natgeo"}});}
+    private void add(String n,String[][] v){ArrayList<Channel> list=new ArrayList<>();for(String[] c:v)list.add(new Channel(c[0],c[1]));categories.put(n,list);}
+    private TextView text(String s,int size,int color){TextView v=new TextView(this);v.setText(s);v.setTextSize(size);v.setTextColor(color);v.setPadding(20,12,20,12);return v;}
+    private LinearLayout base(){LinearLayout l=new LinearLayout(this);l.setOrientation(LinearLayout.VERTICAL);l.setPadding(36,24,36,24);l.setBackgroundColor(BG);return l;}
+    private Button button(String s){Button b=new Button(this);b.setText(s);b.setTextColor(WHITE);b.setTextSize(15);b.setAllCaps(false);b.setFocusable(true);b.setPadding(16,4,16,4);GradientDrawable normal=new GradientDrawable();normal.setColor(Color.rgb(139,0,0));normal.setStroke(1,BORDER);normal.setCornerRadius(10);GradientDrawable focused=new GradientDrawable();focused.setColor(Color.rgb(178,34,34));focused.setStroke(3,RED);focused.setCornerRadius(10);b.setBackground(normal);b.setOnFocusChangeListener((v,has)->b.setBackground(has?focused:normal));return b;}
+    private EditText field(String s,boolean pass){EditText e=new EditText(this);e.setHint(s);e.setHintTextColor(MUTED);e.setTextColor(WHITE);e.setTextSize(16);if(pass)e.setInputType(0x81);e.setSingleLine();return e;}
+    private void showHomeOrLogin(){String u=prefs.getString("user",null);if(u==null)showLogin();else if(validAccess(u))showCatalog();else showRecharge();}
+    private boolean validAccess(String u){return prefs.getLong("expires_"+u,0)>System.currentTimeMillis();}
+    private void showLogin(){root=base();root.setGravity(Gravity.CENTER);TextView t=text("KUROMI TV",34,WHITE);t.setGravity(Gravity.CENTER);root.addView(t,new LinearLayout.LayoutParams(-1,70));EditText user=field("Usuário",false),pass=field("Senha",true);root.addView(user,new LinearLayout.LayoutParams(420,58));root.addView(pass,new LinearLayout.LayoutParams(420,58));Button login=button("Entrar");login.setOnClickListener(v->{String u=user.getText().toString().trim();String p=pass.getText().toString();String saved=prefs.getString("pass_"+u,null);if(saved!=null&&saved.equals(p)){prefs.edit().putString("user",u).apply();if(validAccess(u))showCatalog();else showRecharge();}else toast("Usuário ou senha incorretos");});root.addView(login,new LinearLayout.LayoutParams(420,58));Button register=button("Criar conta");register.setOnClickListener(v->{String u=user.getText().toString().trim();if(u.length()==0||pass.getText().length()==0){toast("Informe usuário e senha");return;}if(prefs.contains("pass_"+u)){toast("Este usuário já existe");return;}prefs.edit().putString("pass_"+u,pass.getText().toString()).putString("user",u).apply();showRecharge();});root.addView(register,new LinearLayout.LayoutParams(420,58));setContentView(root);login.requestFocus();}
+    private void showRecharge(){root=base();root.setGravity(Gravity.CENTER);TextView t=text("ACESSO EXPIRADO",28,WHITE);t.setGravity(Gravity.CENTER);root.addView(t,new LinearLayout.LayoutParams(-1,70));TextView info=text("Digite seu código de recarga para liberar os canais.",17,MUTED);info.setGravity(Gravity.CENTER);root.addView(info,new LinearLayout.LayoutParams(520,70));EditText code=field("Código de recarga",false);root.addView(code,new LinearLayout.LayoutParams(420,58));TextView msg=text("",15,WHITE);msg.setGravity(Gravity.CENTER);root.addView(msg,new LinearLayout.LayoutParams(520,58));Button activate=button("Ativar código");activate.setOnClickListener(v->applyCode(code.getText().toString(),msg));root.addView(activate,new LinearLayout.LayoutParams(420,58));Button logout=button("Sair");logout.setOnClickListener(v->{prefs.edit().remove("user").apply();showLogin();});root.addView(logout,new LinearLayout.LayoutParams(420,58));setContentView(root);activate.requestFocus();loadCodes();}
+    private void applyCode(String raw,TextView msg){String u=prefs.getString("user",null);String code=raw.trim().toUpperCase();Integer days=codes.get(code);if(u==null){showLogin();return;}String used=prefs.getString("used_"+u,"");if(days==null){msg.setText("Código de recarga inválido.");return;}if((","+used+",").contains(","+code+",")){msg.setText("Este código já foi utilizado.");return;}long old=prefs.getLong("expires_"+u,0),start=Math.max(old,System.currentTimeMillis()),expires=start+days*86400000L;prefs.edit().putLong("expires_"+u,expires).putString("used_"+u,used.length()==0?code:used+","+code).apply();msg.setText("Código ativado: "+days+" dia(s).");new android.os.Handler().postDelayed(()->showCatalog(),900);}
+    private void showCatalog(){if(!validAccess(prefs.getString("user",null))){showRecharge();return;}root=base();ScrollView scroll=new ScrollView(this);content=new LinearLayout(this);content.setOrientation(LinearLayout.VERTICAL);LinearLayout header=new LinearLayout(this);header.setGravity(Gravity.CENTER_VERTICAL);TextView title=text("KUROMI TV",28,WHITE);header.addView(title,new LinearLayout.LayoutParams(0,70,1));syncStatus=text("Sincronizando…",13,MUTED);header.addView(syncStatus,new LinearLayout.LayoutParams(180,58));Button refresh=button("Atualizar");refresh.setOnClickListener(v->syncChannels());header.addView(refresh,new LinearLayout.LayoutParams(125,58));Button redeem=button("Recarga");redeem.setOnClickListener(v->showRecharge());header.addView(redeem,new LinearLayout.LayoutParams(105,58));Button logout=button("Sair");logout.setOnClickListener(v->{prefs.edit().remove("user").apply();showLogin();});header.addView(logout,new LinearLayout.LayoutParams(80,58));content.addView(header);player=new WebView(this);player.setBackgroundColor(Color.BLACK);WebSettings ws=player.getSettings();ws.setJavaScriptEnabled(true);ws.setDomStorageEnabled(true);ws.setMediaPlaybackRequiresUserGesture(false);ws.setLoadWithOverviewMode(true);ws.setUseWideViewPort(true);player.setWebChromeClient(new WebChromeClient());player.setWebViewClient(new WebViewClient(){@Override public boolean shouldOverrideUrlLoading(WebView v,WebResourceRequest r){String host=r.getUrl().getHost();if(host!=null&&(host.contains("google.com")||host.contains("docs.google.com"))){toast("A fonte deste canal redirecionou para o Google e está indisponível.");return true;}return false;}@Override public boolean shouldOverrideUrlLoading(WebView v,String url){if(url.contains("google.com")||url.contains("docs.google.com")){toast("A fonte deste canal redirecionou para o Google e está indisponível.");return true;}return false;}});content.addView(player,new LinearLayout.LayoutParams(-1,360));current=text("Escolha um canal abaixo",18,MUTED);current.setGravity(Gravity.CENTER);content.addView(current,new LinearLayout.LayoutParams(-1,58));scroll.addView(content);root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));setContentView(root);renderCategories();syncChannels();loadCodes();}
+    private void renderCategories(){if(content==null)return;while(content.getChildCount()>3)content.removeViewAt(3);for(Map.Entry<String,ArrayList<Channel>> e:categories.entrySet()){LinearLayout card=new LinearLayout(this);card.setOrientation(LinearLayout.VERTICAL);card.setPadding(18,12,18,16);GradientDrawable cardBg=new GradientDrawable();cardBg.setColor(SURFACE);cardBg.setStroke(1,BORDER);cardBg.setCornerRadius(12);card.setBackground(cardBg);TextView heading=text(e.getKey(),22,WHITE);heading.setPadding(4,4,4,10);card.addView(heading);HorizontalScrollView hs=new HorizontalScrollView(this);hs.setHorizontalScrollBarEnabled(false);LinearLayout row=new LinearLayout(this);row.setGravity(Gravity.CENTER_VERTICAL);for(Channel c:e.getValue()){Button b=button(c.name);b.setTag(c);b.setOnClickListener(v->{Channel ch=(Channel)v.getTag();play(ch.id,ch.name);});row.addView(b,new LinearLayout.LayoutParams(180,64));}hs.addView(row);card.addView(hs,new LinearLayout.LayoutParams(-1,76));LinearLayout.LayoutParams cp=new LinearLayout.LayoutParams(-1,112);cp.setMargins(0,0,0,18);content.addView(card,cp);}}
+    private void play(String id,String name){current.setText("Canal atual: "+name);String safe=android.net.Uri.encode(id);String html="<!doctype html><html><head><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><style>html,body{margin:0;padding:0;width:100%;height:100%;background:#000;overflow:hidden}iframe{display:block;width:100%;height:100%;border:0}</style></head><body><iframe src=\"https://sinalpublicoetv.vercel.app/?id="+safe+"\" allow=\"encrypted-media\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen></iframe></body></html>";player.loadDataWithBaseURL("https://sinalpublicoetv.vercel.app/",html,"text/html","UTF-8",null);}
+    private void syncChannels(){String cached=prefs.getString(CACHE_KEY,null);if(cached!=null)try{parseChannels(cached);renderCategories();}catch(Exception ignored){}new Thread(()->{try{String json=getUrl(CHANNELS_URL);parseChannels(json);prefs.edit().putString(CACHE_KEY,json).apply();runOnUiThread(()->{renderCategories();if(syncStatus!=null)syncStatus.setText("Catálogo atualizado");});}catch(Exception e){runOnUiThread(()->{if(syncStatus!=null)syncStatus.setText("Catálogo em cache/offline");});}}).start();}
+    private void loadCodes(){new Thread(()->{try{JSONObject j=new JSONObject(getUrl(CODES_URL));JSONObject valid=j.optJSONObject("VALID_CODES");if(valid!=null){for(String k:codes.keySet()){}java.util.Iterator<String> it=valid.keys();while(it.hasNext()){String k=it.next();codes.put(k,valid.getInt(k));}}}catch(Exception ignored){}}).start();}
+    private String getUrl(String address)throws Exception{HttpURLConnection c=(HttpURLConnection)new URL(address).openConnection();c.setConnectTimeout(10000);c.setReadTimeout(15000);c.setRequestProperty("Cache-Control","no-cache");if(c.getResponseCode()!=200)throw new Exception("HTTP "+c.getResponseCode());BufferedReader br=new BufferedReader(new InputStreamReader(c.getInputStream(),"UTF-8"));StringBuilder s=new StringBuilder();String line;while((line=br.readLine())!=null)s.append(line);br.close();c.disconnect();return s.toString();}
+    private void parseChannels(String json)throws Exception{JSONArray cats=new JSONObject(json).getJSONArray("categories");LinkedHashMap<String,ArrayList<Channel>> next=new LinkedHashMap<>();for(int i=0;i<cats.length();i++){JSONObject cat=cats.getJSONObject(i);JSONArray a=cat.getJSONArray("channels");ArrayList<Channel> list=new ArrayList<>();for(int j=0;j<a.length();j++){JSONObject c=a.getJSONObject(j);list.add(new Channel(c.getString("name"),c.getString("id")));}next.put(cat.getString("name"),list);}categories.clear();categories.putAll(next);}
+    private void toast(String s){Toast.makeText(this,s,Toast.LENGTH_LONG).show();}
     @Override protected void onDestroy(){if(player!=null)player.destroy();super.onDestroy();}
 }
