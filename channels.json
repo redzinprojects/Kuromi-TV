@@ -1,13 +1,610 @@
 {
-  "version": 1,
-  "updatedAt": "2026-08-11T00:00:00Z",
+  "version": 2,
+  "updatedAt": "2026-08-13T13:00:00Z",
+  "source": "https://embedtv.vercel.app/",
   "categories": [
-    {"name":"Canais Abertos","channels":[{"name":"Globo RJ","id":"globorj"},{"name":"Globo SP","id":"globosp"},{"name":"Globo MG","id":"globomg"},{"name":"Globo PE","id":"globope"},{"name":"Globo PB","id":"globopb"},{"name":"Globo RS","id":"globors"},{"name":"Globo ES","id":"globoes"},{"name":"Globo AM","id":"globoam"},{"name":"Globo CE","id":"globoce"},{"name":"SBT","id":"sbt"},{"name":"SBT SP","id":"sbtsp"},{"name":"SBT RJ","id":"sbtrj"},{"name":"Record TV","id":"record"},{"name":"Band","id":"band"}]},
-    {"name":"Notícias","channels":[{"name":"GloboNews","id":"globonews"},{"name":"SBT NEWS","id":"sbtnews"},{"name":"BandNews","id":"bandnews"},{"name":"CNN Brasil","id":"cnnbrasil"},{"name":"Jovem Pan News","id":"jovempan"}]},
-    {"name":"Esportes","channels":[{"name":"SporTV","id":"sportv"},{"name":"SporTV 2","id":"sportv2"},{"name":"SporTV 3","id":"sportv3"},{"name":"ESPN","id":"espn"},{"name":"ESPN 2","id":"espn2"},{"name":"ESPN 3","id":"espn3"},{"name":"ESPN 4","id":"espn4"},{"name":"Premiere","id":"premiere"},{"name":"Combate","id":"combate"},{"name":"Cazé TV","id":"cazetv"},{"name":"Band Sports","id":"bandsports"}]},
-    {"name":"Filmes e Séries","channels":[{"name":"Telecine","id":"telecine"},{"name":"Telecine Premium","id":"telecinepremium"},{"name":"Telecine Pipoca","id":"telecinepipoca"},{"name":"Telecine Action","id":"telecineaction"},{"name":"Universal TV","id":"universal"},{"name":"Studio Universal","id":"studiouniversal"},{"name":"Megapix","id":"megapix"},{"name":"AMC","id":"amc"},{"name":"Paramount Network","id":"paramount"},{"name":"AXN","id":"axn"},{"name":"Syfy","id":"syfy"}]},
-    {"name":"Infantil","channels":[{"name":"Gloob","id":"gloob"},{"name":"Gloobinho","id":"gloobinho"},{"name":"Nickelodeon","id":"nickelodeon"},{"name":"Nick Jr.","id":"nickjr"},{"name":"Cartoon Network","id":"cartoonnetwork"},{"name":"Discovery Kids","id":"discoverykids"},{"name":"Rá-Tim-Bum","id":"ratimbum"}]},
-    {"name":"Documentários e Cultura","channels":[{"name":"Canal Brasil","id":"canalbrasil"},{"name":"Arte 1","id":"arte1"},{"name":"Discovery Channel","id":"discovery"},{"name":"History Channel","id":"history"},{"name":"Animal Planet","id":"animalplanet"},{"name":"National Geographic","id":"natgeo"}]},
-    {"name":"Variedades e Música","channels":[{"name":"Multishow","id":"multishow"},{"name":"GNT","id":"gnt"},{"name":"BIS","id":"bis"},{"name":"MTV","id":"mtv"}]}
+    {
+      "name": "Canais Abertos",
+      "channels": [
+        {
+          "name": "Globo RJ",
+          "id": "globorj"
+        },
+        {
+          "name": "Globo MG",
+          "id": "globomg"
+        },
+        {
+          "name": "Globo SP",
+          "id": "globosp"
+        },
+        {
+          "name": "Globo PE",
+          "id": "globope"
+        },
+        {
+          "name": "Globo PB",
+          "id": "globopb"
+        },
+        {
+          "name": "Globo RS",
+          "id": "globors"
+        },
+        {
+          "name": "Globo ES",
+          "id": "globoes"
+        },
+        {
+          "name": "Globo AM",
+          "id": "globoam"
+        },
+        {
+          "name": "Globo CE",
+          "id": "globoce"
+        },
+        {
+          "name": "Band",
+          "id": "band"
+        },
+        {
+          "name": "Band SP",
+          "id": "bandsp"
+        },
+        {
+          "name": "Band RJ",
+          "id": "bandrj"
+        },
+        {
+          "name": "Cultura",
+          "id": "cultura"
+        },
+        {
+          "name": "Record TV",
+          "id": "record"
+        },
+        {
+          "name": "Record SP",
+          "id": "recordsp"
+        },
+        {
+          "name": "Record MG",
+          "id": "recordmg"
+        },
+        {
+          "name": "Record RJ",
+          "id": "recordrj"
+        },
+        {
+          "name": "Rede TV",
+          "id": "redetv"
+        },
+        {
+          "name": "SBT",
+          "id": "sbt"
+        },
+        {
+          "name": "SBT SP",
+          "id": "sbtsp"
+        },
+        {
+          "name": "SBT RJ",
+          "id": "sbtrj"
+        }
+      ]
+    },
+    {
+      "name": "Notícias",
+      "channels": [
+        {
+          "name": "Globo News",
+          "id": "globonews"
+        },
+        {
+          "name": "Band News",
+          "id": "bandnews"
+        },
+        {
+          "name": "CNN Brasil",
+          "id": "cnnbrasil"
+        },
+        {
+          "name": "Record News",
+          "id": "recordnews"
+        },
+        {
+          "name": "SBT News",
+          "id": "sbtnews"
+        }
+      ]
+    },
+    {
+      "name": "Esportes",
+      "channels": [
+        {
+          "name": "SportyNet",
+          "id": "sportynet"
+        },
+        {
+          "name": "SportyNet+ 1",
+          "id": "sportynetplus1"
+        },
+        {
+          "name": "SportyNet+ 2",
+          "id": "sportynetplus2"
+        },
+        {
+          "name": "SportyNet+ 3",
+          "id": "sportynetplus3"
+        },
+        {
+          "name": "Cazé TV 1",
+          "id": "caze1"
+        },
+        {
+          "name": "Cazé TV 2",
+          "id": "caze2"
+        },
+        {
+          "name": "Cazé TV 3",
+          "id": "caze3"
+        },
+        {
+          "name": "ESPN",
+          "id": "espn"
+        },
+        {
+          "name": "ESPN 2",
+          "id": "espn2"
+        },
+        {
+          "name": "ESPN 3",
+          "id": "espn3"
+        },
+        {
+          "name": "ESPN 4",
+          "id": "espn4"
+        },
+        {
+          "name": "ESPN 5",
+          "id": "espn5"
+        },
+        {
+          "name": "ESPN 6",
+          "id": "espn6"
+        },
+        {
+          "name": "Ge TV",
+          "id": "getv"
+        },
+        {
+          "name": "Band Sports",
+          "id": "bandsports"
+        },
+        {
+          "name": "Combate",
+          "id": "combate"
+        },
+        {
+          "name": "Premiere Clubes",
+          "id": "premiere"
+        },
+        {
+          "name": "Premiere 2",
+          "id": "premiere2"
+        },
+        {
+          "name": "Premiere 3",
+          "id": "premiere3"
+        },
+        {
+          "name": "Premiere 4",
+          "id": "premiere4"
+        },
+        {
+          "name": "Premiere 5",
+          "id": "premiere5"
+        },
+        {
+          "name": "Premiere 6",
+          "id": "premiere6"
+        },
+        {
+          "name": "Premiere 7",
+          "id": "premiere7"
+        },
+        {
+          "name": "Premiere 8",
+          "id": "premiere8"
+        },
+        {
+          "name": "SporTV",
+          "id": "sportv"
+        },
+        {
+          "name": "SporTV 2",
+          "id": "sportv2"
+        },
+        {
+          "name": "SporTV 3",
+          "id": "sportv3"
+        },
+        {
+          "name": "SporTV 4",
+          "id": "sportv4"
+        },
+        {
+          "name": "ELEVEN 1",
+          "id": "pt_eleven1"
+        },
+        {
+          "name": "ELEVEN 2",
+          "id": "pt_eleven2"
+        },
+        {
+          "name": "ELEVEN 3",
+          "id": "pt_eleven3"
+        },
+        {
+          "name": "Benfica TV",
+          "id": "pt_benficatv"
+        },
+        {
+          "name": "A Bola",
+          "id": "pt_abola"
+        },
+        {
+          "name": "Canal 11",
+          "id": "pt_canal11"
+        },
+        {
+          "name": "UFC Fight Pass",
+          "id": "ufcfightpass"
+        },
+        {
+          "name": "XSports",
+          "id": "xsports"
+        }
+      ]
+    },
+    {
+      "name": "Filmes e Séries",
+      "channels": [
+        {
+          "name": "Paramount+ 1",
+          "id": "paramountplus1"
+        },
+        {
+          "name": "Paramount+ 2",
+          "id": "paramountplus2"
+        },
+        {
+          "name": "Paramount+ 3",
+          "id": "paramountplus3"
+        },
+        {
+          "name": "MAX 1",
+          "id": "max1"
+        },
+        {
+          "name": "MAX 2",
+          "id": "max2"
+        },
+        {
+          "name": "MAX 3",
+          "id": "max3"
+        },
+        {
+          "name": "Disney+ 1",
+          "id": "disneyplus1"
+        },
+        {
+          "name": "Disney+ 2",
+          "id": "disneyplus2"
+        },
+        {
+          "name": "Disney+ 3",
+          "id": "disneyplus3"
+        },
+        {
+          "name": "Prime Video 1",
+          "id": "primevideo"
+        },
+        {
+          "name": "Prime Video 2",
+          "id": "primevideo2"
+        },
+        {
+          "name": "Prime Video 3",
+          "id": "primevideo3"
+        },
+        {
+          "name": "Prime Video 4",
+          "id": "primevideo4"
+        },
+        {
+          "name": "A&E",
+          "id": "aie"
+        },
+        {
+          "name": "AMC",
+          "id": "amc"
+        },
+        {
+          "name": "Megapix",
+          "id": "megapix"
+        },
+        {
+          "name": "AXN",
+          "id": "axn"
+        },
+        {
+          "name": "Cinemax",
+          "id": "cinemax"
+        },
+        {
+          "name": "HBO",
+          "id": "hbo"
+        },
+        {
+          "name": "HBO 2",
+          "id": "hbo2"
+        },
+        {
+          "name": "HBO Family",
+          "id": "hbofamily"
+        },
+        {
+          "name": "HBO Mundi",
+          "id": "hbomundi"
+        },
+        {
+          "name": "HBO Plus",
+          "id": "hboplus"
+        },
+        {
+          "name": "HBO Pop",
+          "id": "hbopop"
+        },
+        {
+          "name": "HBO Xtreme",
+          "id": "hboxtreme"
+        },
+        {
+          "name": "HBO Signature",
+          "id": "hbosignathure"
+        },
+        {
+          "name": "Sony Channel",
+          "id": "sony"
+        },
+        {
+          "name": "Space",
+          "id": "space"
+        },
+        {
+          "name": "Studio Universal",
+          "id": "studiouniversal"
+        },
+        {
+          "name": "Telecine Action",
+          "id": "telecineaction"
+        },
+        {
+          "name": "Telecine Cult",
+          "id": "telecinecult"
+        },
+        {
+          "name": "Telecine Fun",
+          "id": "telecinefun"
+        },
+        {
+          "name": "Telecine Pipoca",
+          "id": "telecinepipoca"
+        },
+        {
+          "name": "Telecine Premium",
+          "id": "telecinepremium"
+        },
+        {
+          "name": "Telecine Touch",
+          "id": "telecinetouch"
+        },
+        {
+          "name": "TNT",
+          "id": "tnt"
+        },
+        {
+          "name": "TNT Novelas",
+          "id": "tntnovelas"
+        },
+        {
+          "name": "TNT Series",
+          "id": "tntseries"
+        },
+        {
+          "name": "Universal TV",
+          "id": "universaltv"
+        },
+        {
+          "name": "Warner TV",
+          "id": "warnerchannel"
+        }
+      ]
+    },
+    {
+      "name": "Infantil",
+      "channels": [
+        {
+          "name": "Cartoon Network",
+          "id": "cartoonnetwork"
+        },
+        {
+          "name": "Cartoonito",
+          "id": "cartoonito"
+        },
+        {
+          "name": "Discovery Kids",
+          "id": "discoverykids"
+        },
+        {
+          "name": "Gloob",
+          "id": "gloob"
+        }
+      ]
+    },
+    {
+      "name": "Documentários e Cultura",
+      "channels": [
+        {
+          "name": "Animal Planet",
+          "id": "animalplanet"
+        },
+        {
+          "name": "Arte 1",
+          "id": "arte1"
+        },
+        {
+          "name": "Curta!",
+          "id": "curta"
+        },
+        {
+          "name": "Discovery Channel",
+          "id": "discoverychannel"
+        },
+        {
+          "name": "Discovery Home & Health",
+          "id": "discoveryhh"
+        },
+        {
+          "name": "Discovery Science",
+          "id": "discoveryscience"
+        },
+        {
+          "name": "Discovery Theater",
+          "id": "discoverytheather"
+        },
+        {
+          "name": "Discovery Turbo",
+          "id": "discoveryturbo"
+        },
+        {
+          "name": "Discovery World",
+          "id": "discoveryworld"
+        },
+        {
+          "name": "Fish TV",
+          "id": "fishtv"
+        },
+        {
+          "name": "Food Network",
+          "id": "foodnetwork"
+        },
+        {
+          "name": "HGTV",
+          "id": "hgtv"
+        },
+        {
+          "name": "History 1",
+          "id": "history"
+        },
+        {
+          "name": "History 2",
+          "id": "history2"
+        },
+        {
+          "name": "TLC",
+          "id": "tlc"
+        }
+      ]
+    },
+    {
+      "name": "Variedades e Música",
+      "channels": [
+        {
+          "name": "Sporttv 1",
+          "id": "pt_sportv1"
+        },
+        {
+          "name": "Sporttv 2",
+          "id": "pt_sportv2"
+        },
+        {
+          "name": "Sporttv 3",
+          "id": "pt_sportv3"
+        },
+        {
+          "name": "Sporttv 4",
+          "id": "pt_sportv4"
+        },
+        {
+          "name": "Sporttv 5",
+          "id": "pt_sportv5"
+        },
+        {
+          "name": "Sporttv 6",
+          "id": "pt_sportv6"
+        },
+        {
+          "name": "Sporttv 7",
+          "id": "pt_sportv7"
+        },
+        {
+          "name": "Adult Swim",
+          "id": "adultswim"
+        },
+        {
+          "name": "BIS",
+          "id": "bis"
+        },
+        {
+          "name": "GNT",
+          "id": "gnt"
+        },
+        {
+          "name": "Lifetime",
+          "id": "lifetime"
+        },
+        {
+          "name": "Modo Viagem",
+          "id": "modoviagem"
+        },
+        {
+          "name": "Multishow",
+          "id": "multishow"
+        },
+        {
+          "name": "Off",
+          "id": "off"
+        },
+        {
+          "name": "24H PlayBoy",
+          "id": "playboy"
+        },
+        {
+          "name": "24H SexyHot",
+          "id": "sexyhot"
+        },
+        {
+          "name": "24H Naruto",
+          "id": "24h_naruto"
+        },
+        {
+          "name": "24H Dragonball",
+          "id": "24h_dragonball"
+        },
+        {
+          "name": "24H Os Simpsons",
+          "id": "24h_simpsons"
+        },
+        {
+          "name": "24H Chaves",
+          "id": "24h_chaves"
+        },
+        {
+          "name": "24H Todo Mundo Odeia o Cris",
+          "id": "24h_odeiachris"
+        }
+      ]
+    }
   ]
-}
+        }
