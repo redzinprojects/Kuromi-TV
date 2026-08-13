@@ -2,7 +2,7 @@
     <uses-feature android:name="android.software.leanback" android:required="false" />
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <application android:theme="@style/AppTheme" android:label="Kuromi TV" android:icon="@drawable/icon_kuromi" android:banner="@drawable/icon_kuromi" android:usesCleartextTraffic="true" android:hardwareAccelerated="true" android:supportsRtl="true">
+    <application android:theme="@style/AppTheme" android:label="RED TV" android:icon="@drawable/icon_kuromi" android:banner="@drawable/icon_kuromi" android:usesCleartextTraffic="true" android:hardwareAccelerated="true" android:supportsRtl="true">
         <activity android:name=".MainActivity" android:screenOrientation="landscape" android:configChanges="keyboard|keyboardHidden|orientation|screenSize" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
